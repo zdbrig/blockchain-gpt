@@ -1,4 +1,4 @@
-function appendOutput(output, text, addPrompt) {
+function appendOutput(output, text, addPrompt = false) {
     if (addPrompt) {
         output.append(`$ ${text}\n`);
     } else {
