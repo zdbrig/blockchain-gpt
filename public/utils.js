@@ -32,7 +32,7 @@ function processServerResponse(data, output) {
     const codeMatch = codeRegex.exec(data);
 
     if (codeMatch) {
-        appendOutput(output, `${data}`, false);
+       // appendOutput(output, `${data}`, false);
         const scriptContent = codeMatch[1].trim();
         executeScript(scriptContent, output);
     } else {
