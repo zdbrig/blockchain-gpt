@@ -18,7 +18,7 @@ services:
   backend:
     build: backend
     ports:
-       - 5050:5005
+       - 5050:5050
     
     container_name: backend_gpt_terminal
     restart: always  
