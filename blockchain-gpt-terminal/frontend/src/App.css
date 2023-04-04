@@ -1,0 +1,13 @@
+.App {
+  text-align: center;
+}
+
+.bodyContainer{
+  flex:1,
+}
+
+.drawerclosebutton{
+  left:70px;
+  font-size: 25px;
+  top:4px;
+}

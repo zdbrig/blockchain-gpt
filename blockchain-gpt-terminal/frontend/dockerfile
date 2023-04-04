@@ -1,0 +1,7 @@
+FROM node:14.17.3
+WORKDIR /app
+COPY . .
+RUN  npm install 
+RUN chmod -R a+rwx ./node_modules 
+EXPOSE 4500
+CMD ["npm", "start"]

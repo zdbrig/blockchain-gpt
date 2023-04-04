@@ -1,0 +1,28 @@
+version: '3'   
+services:
+  frontend:
+    build: frontend
+    
+    ports:
+      - 3000:3000
+  
+    stdin_open: true
+    container_name: frontend_gpt_terminal
+    restart: always  
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      -  backend
+
+  backend:
+    build: backend
+    ports:
+       - 5050:5005
+    
+    container_name: backend_gpt_terminal
+    restart: always  
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+ 
