@@ -5,7 +5,7 @@ import TextField from "material-ui/TextField";
 import "./css/TerminalAccess.css";
 import Terminal from "react-bash";
 import request from "superagent";
-var apiBaseUrl = "http://localhost:5050/api";
+var apiBaseUrl = "/backend";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import RaisedButton from "material-ui/RaisedButton";
@@ -23,7 +23,7 @@ import {
 async function getData(input) {
   return new Promise((resolve, reject) => {
     request
-      .post(apiBaseUrl + "/execute-command")
+      .post("/api/execute-command")
       .send({ command: input })
       .set("Accept", "application/json")
       .set("Access-Control-Allow-Origin", "*")

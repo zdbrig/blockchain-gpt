@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.9.5"
+    "react-scripts": "^0.9.5"
   },
   "dependencies": {
+    "http-proxy-middleware": "^2.0.6",
     "material-ui": "^0.17.1",
     "react": "^15.4.2",
     "react-bash": "^1.5.3",
@@ -23,5 +24,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://backend:5050"
+
 }
