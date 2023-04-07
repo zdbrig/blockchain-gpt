@@ -1,0 +1,24 @@
+{
+  "name": "terminal_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.1.5",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "multer": "^1.3.0",
+    "mysql": "^2.13.0",
+    "node-cmd": "^2.0.0",
+    "promise": "^7.1.1",
+    "dotenv": "^16.0.3",
+    "openai": "^3.2.1"
+  }
+}
