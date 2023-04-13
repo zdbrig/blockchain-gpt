@@ -3,6 +3,10 @@ import Session from "supertokens-node/recipe/session";
 import { TypeInput } from "supertokens-node/types";
 import Dashboard from "supertokens-node/recipe/dashboard";
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export function getApiDomain() {
     const apiPort = process.env.REACT_APP_API_PORT || 3001;
     const apiUrl = process.env.REACT_APP_API_URL || `http://localhost:${apiPort}`;
@@ -35,8 +39,8 @@ export const SuperTokensConfig: TypeInput = {
                 // We have provided you with development keys which you can use for testing.
                 // IMPORTANT: Please replace them with your own OAuth keys for production use.
                 ThirdPartyEmailPassword.Google({
-                    clientId: String(process.env.cliend_id),
-                    clientSecret: String(process.env.client_secret),
+                    clientId:'901750243005-bka0vtgt262n1ivj8pe5i8dtfvbkqqgh.apps.googleusercontent.com',
+                    clientSecret: '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'
                 }),
                 // ThirdPartyEmailPassword.Github({
                 //     clientSecret: "e97051221f4b6426e8fe8d51486396703012f5bd",
