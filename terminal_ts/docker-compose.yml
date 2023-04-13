@@ -1,0 +1,39 @@
+version: '3'   
+services:
+  frontend:
+    build: frontend
+    
+    ports:
+      - 3000:3000
+  
+    stdin_open: true
+    container_name: frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      -  blockchain_gpt
+
+  auth:
+    build: backend/auth
+    ports:
+       - 3001:3001
+    
+    container_name: auth
+    volumes:
+      - ./backend/auth:/app
+      - /app/node_modules
+
+  blockchain_gpt:
+    build: backend/blockchain_gpt
+    ports:
+       - 3040:3040
+    
+    container_name: blockchain_gpt
+    volumes:
+      - ./backend/blockchain_gpt:/app
+      - /app/node_modules
+    depends_on:
+      -  auth
+
+ 
