@@ -25,6 +25,7 @@ export const SuperTokensConfig: TypeInput = {
         appName: "Blockcahin Terminal",
         apiDomain: getApiDomain(),
         websiteDomain: getWebsiteDomain(),
+        websiteBasePath: "/auth"
     },
     // recipeList contains all the modules that you want to
     // use from SuperTokens. See the full list here: https://supertokens.com/docs/guides
