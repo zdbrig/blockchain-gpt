@@ -3,9 +3,12 @@ import Session from "supertokens-node/recipe/session";
 import { TypeInput } from "supertokens-node/types";
 import Dashboard from "supertokens-node/recipe/dashboard";
 
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
+import * as path from "path";
 
-dotenv.config();
+
+const __dirname = path.resolve()
+dotenv.config({ path: path.join(__dirname, './.env') });
 
 export function getApiDomain() {
     const apiPort = process.env.REACT_APP_API_PORT || 3001;
@@ -22,8 +25,8 @@ export function getWebsiteDomain() {
 export const SuperTokensConfig: TypeInput = {
     supertokens: {
         // this is the location of the SuperTokens core.
-        connectionURI: "https://dev-2acbad11d94711ed81dedf131734f418-eu-west-1.aws.supertokens.io:3570",
-        apiKey:"JuHwaSIRdGeb5xzp=MnTQRfDoT90QF"
+        connectionURI: String(process.env.URI),
+        apiKey:String(process.env.KEY)
     },
     appInfo: {
         appName: "Blockcahin Terminal",
@@ -39,15 +42,13 @@ export const SuperTokensConfig: TypeInput = {
                 // We have provided you with development keys which you can use for testing.
                 // IMPORTANT: Please replace them with your own OAuth keys for production use.
                 ThirdPartyEmailPassword.Google({
-                    // clientId:'9901750243005-pa24k2o93uvc9sdhq42vidc320b2r7un.apps.googleusercontent.com',
-                    // clientSecret: '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'
-                    clientId: "1060725074195-kmeum4crr01uirfl2op9kd5acmi9jutn.apps.googleusercontent.com",
-                    clientSecret: "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",
+                    clientId: String(process.env.CLIENT_ID),
+                    clientSecret: String(process.env.CLIENT_SECRET),
                 }),
-                // ThirdPartyEmailPassword.Github({
-                //     clientSecret: "e97051221f4b6426e8fe8d51486396703012f5bd",
-                //     clientId: "467101b197249757c71f",
-                // }),
+                ThirdPartyEmailPassword.Github({
+                    clientSecret:String(process.env.GITHUB_CLIENT),
+                    clientId: String(process.env.GITHUB_SECRET),
+                }),
                 // ThirdPartyEmailPassword.Apple({
                 //     clientId: "4398792-io.supertokens.example.service",
                 //     clientSecret: {

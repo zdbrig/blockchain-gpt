@@ -67,10 +67,7 @@ const Terminal: React.FC = () => {
   };
 
   //ethereum functions
-  const _connectToMetaMask = async (): Promise<{
-    publicKey: string | null;
-    error: string | null;
-  } | null> => {
+  const _connectToMetaMask = async (): Promise<string| null> => {
     // Check if MetaMask is installed
     if (typeof window.ethereum === "undefined") {
       console.log("Please install MetaMask to use this feature");
