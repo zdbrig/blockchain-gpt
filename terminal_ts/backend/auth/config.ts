@@ -39,8 +39,10 @@ export const SuperTokensConfig: TypeInput = {
                 // We have provided you with development keys which you can use for testing.
                 // IMPORTANT: Please replace them with your own OAuth keys for production use.
                 ThirdPartyEmailPassword.Google({
-                    clientId:'901750243005-bka0vtgt262n1ivj8pe5i8dtfvbkqqgh.apps.googleusercontent.com',
-                    clientSecret: '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'
+                    // clientId:'9901750243005-pa24k2o93uvc9sdhq42vidc320b2r7un.apps.googleusercontent.com',
+                    // clientSecret: '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'
+                    clientId: "1060725074195-kmeum4crr01uirfl2op9kd5acmi9jutn.apps.googleusercontent.com",
+                    clientSecret: "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",
                 }),
                 // ThirdPartyEmailPassword.Github({
                 //     clientSecret: "e97051221f4b6426e8fe8d51486396703012f5bd",

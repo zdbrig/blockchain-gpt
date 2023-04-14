@@ -15,10 +15,10 @@
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.2.1",
         "react-scripts": "5.0.1",
+        "superagent": "^8.0.9",
         "supertokens-auth-react": "latest",
         "typescript": "^4.8.2",
-        "web-vitals": "^2.1.4",
-        "superagent": "^8.0.9"
+        "web-vitals": "^2.1.4"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -44,5 +44,8 @@
             "last 1 safari version"
         ]
     },
-    "proxy":"http://auth:3001"
+    "proxy": "http://auth:3001",
+    "devDependencies": {
+        "@types/superagent": "^4.1.16"
+    }
 }

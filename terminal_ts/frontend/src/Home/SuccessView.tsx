@@ -9,7 +9,7 @@ import {
   SeparatorLine,
   SignOutIcon,
 } from "../assets/images";
-import Terminal from "./../components/Terminal"
+import Terminal from "./../components/Terminal_ts"
 
 interface ILink {
   name: string;
