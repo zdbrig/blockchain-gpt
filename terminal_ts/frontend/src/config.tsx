@@ -15,9 +15,11 @@ export function getWebsiteDomain() {
 
 export const SuperTokensConfig = {
     appInfo: {
-        appName: "SuperTokens Demo App",
+        appName: "Blockchain Terminal Domain",
         apiDomain: getApiDomain(),
         websiteDomain: getWebsiteDomain(),
+        apiBasePath: "/auth",
+        websiteBasePath: "/auth"
     },
     // recipeList contains all the modules that you want to
     // use from SuperTokens. See the full list here: https://supertokens.com/docs/guides

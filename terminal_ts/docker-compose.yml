@@ -14,12 +14,12 @@ services:
     depends_on:
       -  blockchain_gpt
 
-  auth:
+  authentification:
     build: backend/auth
     ports:
        - 3001:3001
     
-    container_name: auth
+    container_name: authentification
     volumes:
       - ./backend/auth:/app
       - /app/node_modules

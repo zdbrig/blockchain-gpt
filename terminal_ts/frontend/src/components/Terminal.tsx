@@ -9,7 +9,6 @@ interface Output {
 const Terminal: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<Output[]>([]);
-  const [apiBaseUrl, setApiBaseURL] = useState<string>("/backend");
   const[solanaNetwork,setSolanaNetwork]=useState<string>('https://api.mainnet-beta.solana.com');
   const[connection,setConnection]=useState<any>(new window.solanaWeb3.Connection(solanaNetwork));
 

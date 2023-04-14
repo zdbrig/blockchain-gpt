@@ -11,6 +11,7 @@
         "@types/react": "^18.0.18",
         "@types/react-dom": "^18.0.6",
         "axios": "^0.21.0",
+        "http-proxy-middleware": "^2.0.6",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.2.1",
@@ -44,7 +45,7 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://auth:3001",
+    "proxy": "http://authentification:3001",
     "devDependencies": {
         "@types/superagent": "^4.1.16"
     }
