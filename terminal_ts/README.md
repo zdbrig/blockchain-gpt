@@ -22,21 +22,21 @@ Those links contain the process step-by-step
 
 ## Edit environement files
 3. Go backend/auth and create .env file and set values 
-    URI=  /* Core connectionURI that you saved */
-    KEY= /* Core API key */
+    * URI=  /* Core connectionURI that you saved */
+    * KEY= /* Core API key */
 
-    CLIENT_ID= /* Google Client ID */
-    CLIENT_SECRET=/* Google Client Secret*/
+    * CLIENT_ID= /* Google Client ID */
+    * CLIENT_SECRET=/* Google Client Secret*/
 
-    GITHUB_CLIENT= /* Github Client */
-    GITHUB_SECRET= /* Github Secret */ 
+    * GITHUB_CLIENT= /* Github Client */
+    * GITHUB_SECRET= /* Github Secret */ 
 
 4. Go backend/blockchain_gpt , create .env file and set value 
-    API_KEY= /* Chat GPT API Key*/
+    * API_KEY= /* Chat GPT API Key*/
 
 5. Go frontend , create .env file and set value
-    SKIP_PREFLIGHT_CHECK=true
-    it takes true or false: 
+    * SKIP_PREFLIGHT_CHECK=true
+    * it takes true or false: 
         * true : ignore eslint check
         * false : dont ignore eslint check
 
