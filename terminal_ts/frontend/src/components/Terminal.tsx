@@ -9,8 +9,12 @@ interface Output {
 const Terminal: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<Output[]>([]);
-  const[solanaNetwork,setSolanaNetwork]=useState<string>('https://api.mainnet-beta.solana.com');
-  const[connection,setConnection]=useState<any>(new window.solanaWeb3.Connection(solanaNetwork));
+  const [solanaNetwork, setSolanaNetwork] = useState<string>(
+    "https://api.mainnet-beta.solana.com"
+  );
+  const [connection, setConnection] = useState<any>(
+    new window.solanaWeb3.Connection(solanaNetwork)
+  );
 
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -66,7 +70,7 @@ const Terminal: React.FC = () => {
   };
 
   //ethereum functions
-  const _connectToMetaMask = async (): Promise<string| null> => {
+  const _connectToMetaMask = async (): Promise<string | null> => {
     // Check if MetaMask is installed
     if (typeof window.ethereum === "undefined") {
       console.log("Please install MetaMask to use this feature");
@@ -121,7 +125,6 @@ const Terminal: React.FC = () => {
       // return null;
     }
   };
-  // Get public key from MetaMask
   const _getPublicKey = async (): Promise<void | null | string> => {
     // Check if MetaMask is installed
     if (typeof window.ethereum === "undefined") {
@@ -150,7 +153,6 @@ const Terminal: React.FC = () => {
     }
   };
 
-  // Get network information from MetaMask
   const _getNetworkInfo = async (): Promise<void | null | {
     chainId: string;
     networkId: number;
@@ -210,7 +212,10 @@ const Terminal: React.FC = () => {
     }
   };
 
-  const _getBalance = async (address: any, type = "ether"): Promise<void | null |string> => {
+  const _getBalance = async (
+    address: any,
+    type = "ether"
+  ): Promise<void | null | string> => {
     const ERC20 = window.ERC20;
     // Check if MetaMask is installed
     if (typeof window.ethereum === "undefined") {
@@ -247,7 +252,10 @@ const Terminal: React.FC = () => {
     }
   };
 
-  const _deployNewToken = async (supply: any, name: any): Promise<null |string> => {
+  const _deployNewToken = async (
+    supply: any,
+    name: any
+  ): Promise<null | string> => {
     const ERC20 = window.ERC20;
 
     // Check if MetaMask is installed
@@ -296,8 +304,7 @@ const Terminal: React.FC = () => {
         data: contractData,
       };
 
-      console.log('Transaction ', transaction, typeof(transaction))
-
+      console.log("Transaction ", transaction, typeof transaction);
 
       // Sign and send the transaction
       const signedTransaction = await window.ethereum.request({
@@ -305,22 +312,26 @@ const Terminal: React.FC = () => {
         params: [transaction],
       });
 
-      console.log('Signed Transaction ', signedTransaction, typeof(signedTransaction))
+      console.log(
+        "Signed Transaction ",
+        signedTransaction,
+        typeof signedTransaction
+      );
 
       const transactionHash = await window.web3.eth.sendSignedTransaction(
         signedTransaction.rawTransaction
       );
 
-      console.log('Transaction hash ', transactionHash, typeof(transactionHash))
+      console.log("Transaction hash ", transactionHash, typeof transactionHash);
 
       // Get the deployed contract address
       const receipt = await window.web3.eth.getTransactionReceipt(
         transactionHash
       );
-      console.log('Receipt ', receipt, typeof(receipt))
+      console.log("Receipt ", receipt, typeof receipt);
 
       const contractAddress = receipt.contractAddress;
-      console.log(contractAddress, typeof(contractAddress))
+      console.log(contractAddress, typeof contractAddress);
       return contractAddress;
     } catch (error: any) {
       // Handle error gracefully
@@ -329,111 +340,116 @@ const Terminal: React.FC = () => {
     }
   };
 
-
   //solana functions
-  const _connectToPhantomWallet=async ():Promise<null|string>=> {
+  const _connectToPhantomWallet = async (): Promise<null | string> => {
     const wallet = window.solanaWalletAdapterWallets.getPhantomWallet();
 
     if (!wallet) {
-        console.log('Please install Phantom Wallet to use this feature');
-        return null;
+      console.log("Please install Phantom Wallet to use this feature");
+      return null;
     }
 
     if (wallet.connected) {
-        console.log('You are already connected to Phantom Wallet');
-        return wallet.publicKey.toBase58();
+      console.log("You are already connected to Phantom Wallet");
+      return wallet.publicKey.toBase58();
     }
 
     try {
-        await wallet.connect();
-        localStorage.setItem('solanaPublicKey', wallet.publicKey.toBase58());
-        return wallet.publicKey.toBase58();
-    } catch (error:any) {
-        console.log('Failed to connect to Phantom Wallet: ' + error.message);
-        return null;
-    }
-}
-
-const _disconnectFromPhantomWallet=async ():Promise<null|void>=> {
-  const wallet = window.solanaWalletAdapterWallets.getPhantomWallet();
-
-  if (!wallet) {
-      console.log('Please install Phantom Wallet to use this feature');
-      return null;
-  }
-
-  if (!wallet.connected) {
-      console.log('You are already disconnected from Phantom Wallet');
-      return null;
-  }
-
-  try {
-      await wallet.disconnect();
-      localStorage.removeItem('solanaPublicKey');
-      console.log('You have successfully disconnected from Phantom Wallet');
-  } catch (error:any) {
-      console.log('Failed to disconnect from Phantom Wallet: ' + error.message);
-      return null;
-  }
-}
-
-const _getSolanaPublicKey=async():Promise<null|string>=> {
-  const wallet = window.solanaWalletAdapterWallets.getPhantomWallet();
-
-  if (!wallet) {
-      console.log('Please install Phantom Wallet to use this feature');
-      return null;
-  }
-
-  if (!wallet.connected) {
-      console.log('You are not connected to Phantom Wallet');
-      return null;
-  }
-
-  try {
+      await wallet.connect();
+      localStorage.setItem("solanaPublicKey", wallet.publicKey.toBase58());
       return wallet.publicKey.toBase58();
-  } catch (error:any) {
-      console.log('Failed to retrieve public key from Phantom Wallet: ' + error.message);
+    } catch (error: any) {
+      console.log("Failed to connect to Phantom Wallet: " + error.message);
       return null;
-  }
-}
-const _getSolanaNetworkInfo=async ():Promise<{rpcUrl:string,networkName:string}>=> {
-  const networkInfo = {
-      rpcUrl: solanaNetwork,
-      networkName: 'Solana Mainnet Beta'
+    }
   };
 
-  return networkInfo;
-}
-const _getSolanaBalance = async (address:any):Promise<null|number>=> {
-  if (!address) {
-      console.log('Invalid address');
-      return null;
-  }
+  const _disconnectFromPhantomWallet = async (): Promise<null | void> => {
+    const wallet = window.solanaWalletAdapterWallets.getPhantomWallet();
 
-  try {
+    if (!wallet) {
+      console.log("Please install Phantom Wallet to use this feature");
+      return null;
+    }
+
+    if (!wallet.connected) {
+      console.log("You are already disconnected from Phantom Wallet");
+      return null;
+    }
+
+    try {
+      await wallet.disconnect();
+      localStorage.removeItem("solanaPublicKey");
+      console.log("You have successfully disconnected from Phantom Wallet");
+    } catch (error: any) {
+      console.log("Failed to disconnect from Phantom Wallet: " + error.message);
+      return null;
+    }
+  };
+
+  const _getSolanaPublicKey = async (): Promise<null | string> => {
+    const wallet = window.solanaWalletAdapterWallets.getPhantomWallet();
+
+    if (!wallet) {
+      console.log("Please install Phantom Wallet to use this feature");
+      return null;
+    }
+
+    if (!wallet.connected) {
+      console.log("You are not connected to Phantom Wallet");
+      return null;
+    }
+
+    try {
+      return wallet.publicKey.toBase58();
+    } catch (error: any) {
+      console.log(
+        "Failed to retrieve public key from Phantom Wallet: " + error.message
+      );
+      return null;
+    }
+  };
+  const _getSolanaNetworkInfo = async (): Promise<{ rpcUrl: string; networkName: string;}> => {
+    const networkInfo = {
+      rpcUrl: solanaNetwork,
+      networkName: "Solana Mainnet Beta",
+    };
+
+    return networkInfo;
+  };
+  
+  const _getSolanaBalance = async (address: any): Promise<null | number> => {
+    if (!address) {
+      console.log("Invalid address");
+      return null;
+    }
+
+    try {
       const publicKey = new window.solanaWeb3.PublicKey(address);
       const balance = await connection.getBalance(publicKey);
       const lamportsToSol = balance / 1e9;
       return lamportsToSol;
-  } catch (error:any) {
-      console.log('Failed to retrieve balance: ' + error.message);
+    } catch (error: any) {
+      console.log("Failed to retrieve balance: " + error.message);
       return null;
-  }
-}
+    }
+  };
   type CommandWriter = (message?: any, ...optionalParams: any[]) => void;
 
-  const processServerResponse = async (data: string, commandWriter: CommandWriter): Promise<string> => {
+  const processServerResponse = async (
+    data: string,
+    commandWriter: CommandWriter
+  ): Promise<string> => {
     const codeRegex: RegExp = /```(?:javascript)?\s*([\s\S]*?)\s*```/g;
     const codeMatch: RegExpExecArray | null = codeRegex.exec(data);
-  
+
     if (codeMatch) {
       const scriptContent: string = codeMatch[1].trim();
       const wrappedScript: string = `(async () => { ${scriptContent} })();`;
-  
+
       try {
         let capturedOutput: any;
-        const originalConsoleLog: Console['log'] = console.log;
+        const originalConsoleLog: Console["log"] = console.log;
         console.log = commandWriter;
         const result: any = await eval(wrappedScript);
         return capturedOutput;
@@ -444,7 +460,6 @@ const _getSolanaBalance = async (address:any):Promise<null|number>=> {
       return `${data}\n`;
     }
   };
-  
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setInput(event.target.value);

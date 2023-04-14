@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 // This exposes all the APIs from SuperTokens to the client.
 app.use(middleware());
 
-// An example API that requires session verification
+// sessionIno API requires session verification
 app.get("/sessioninfo", verifySession(), async (req: SessionRequest, res) => {
     let session = req.session;
     res.send({
@@ -38,10 +38,9 @@ app.get("/sessioninfo", verifySession(), async (req: SessionRequest, res) => {
     });
 });
 
-
+//refresh session and re-generate token
 app.get("/session/refresh")
-// In case of session related errors, this error handler
-// returns 401 to the client.
+
 app.use(errorHandler());
 
 
@@ -55,6 +54,7 @@ app.get("/check_login", verifySession(), (req: SessionRequest, res) => {
         res.json({ loggedIn: false });
     }
 });
+
 app.post('/gpt-test', verifySession(),  async (req: SessionRequest, res) => {
     const input = req.body.command;
     if (req.session !== undefined) {

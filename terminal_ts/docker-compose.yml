@@ -12,7 +12,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     depends_on:
-      -  blockchain_gpt
+      -  authentification
 
   authentification:
     build: backend/auth
@@ -23,6 +23,8 @@ services:
     volumes:
       - ./backend/auth:/app
       - /app/node_modules
+    depends_on:
+      -  blockchain_gpt
 
   blockchain_gpt:
     build: backend/blockchain_gpt
@@ -33,7 +35,6 @@ services:
     volumes:
       - ./backend/blockchain_gpt:/app
       - /app/node_modules
-    depends_on:
-      -  auth
+  
 
  

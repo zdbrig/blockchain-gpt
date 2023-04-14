@@ -21,12 +21,9 @@ export const SuperTokensConfig = {
         apiBasePath: "/auth",
         websiteBasePath: "/auth"
     },
-    // recipeList contains all the modules that you want to
-    // use from SuperTokens. See the full list here: https://supertokens.com/docs/guides
     recipeList: [
         ThirdPartyEmailPassword.init({
             signInAndUpFeature: {
-                // providers: [Github.init(), Google.init(), Apple.init()],
                 providers: [Github.init(), Google.init()],
 
             },
@@ -35,6 +32,3 @@ export const SuperTokensConfig = {
     ],
 };
 
-export const recipeDetails = {
-    docsLink: "https://supertokens.com/docs/thirdpartyemailpassword/introduction",
-};

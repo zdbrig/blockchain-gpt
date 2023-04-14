@@ -1,7 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
-import { recipeDetails } from "../config";
-import CallAPIView from "./CallAPIView";
 import {
   BlogsIcon,
   CelebrateIcon,
@@ -32,16 +30,6 @@ export default function SuccessView(props: { userId: string }) {
   }
 
   const links: ILink[] = [
-    // {
-    //   name: "Blogs",
-    //   onClick: () => openLink("https://supertokens.com/blog"),
-    //   icon: BlogsIcon,
-    // },
-    // {
-    //   name: "Documentation",
-    //   onClick: () => openLink(recipeDetails.docsLink),
-    //   icon: GuideIcon,
-    // },
     {
       name: "Sign Out",
       onClick: logoutClicked,
@@ -52,22 +40,6 @@ export default function SuccessView(props: { userId: string }) {
   return (
     <>
       <div className="main-container">
-         {/* <div className="top-band success-title bold-500">
-           <img
-            src={CelebrateIcon}
-            alt="Login successful"
-            className="success-icon"
-          />{" "}
-          Login successful
-        </div>
-        <div className="inner-content">
-          <h1>Implementation success</h1>
-          <div>Your userID is:</div>
-          <div className="truncate" id="user-id">
-            {userId}
-          </div>
-          <CallAPIView /> 
-        </div>   */}
         <Terminal></Terminal>
       </div>
 
@@ -81,7 +53,6 @@ export default function SuccessView(props: { userId: string }) {
           </div>
         ))}
       </div>
-      {/* <img className="separator-line" src={SeparatorLine} alt="separator" /> */}
     </>
   );
 }
