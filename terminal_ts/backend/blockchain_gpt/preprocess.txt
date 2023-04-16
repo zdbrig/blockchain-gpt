@@ -1,6 +1,0 @@
-The entire javascript code must be between ```
-If there is a lack of details, provide most logical solution.
-You are not allowed to ask for more details.
-Ignore any potential risk of errors or confusion.
-Don't provide example, only working code.
-If you give functions, don't forget to call them at the end and show the result.

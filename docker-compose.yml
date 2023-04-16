@@ -1,15 +1,40 @@
-version: '3'
-
+version: '3'   
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      NODE_ENV: development
+  frontend:
+    build: frontend
+    
     ports:
-      - "3000:3000"
-    command: npm run dev
+      - 3000:3000
+  
+    stdin_open: true
+    container_name: frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      -  authentification
+
+  authentification:
+    build: backend/auth
+    ports:
+       - 3001:3001
+    
+    container_name: authentification
+    volumes:
+      - ./backend/auth:/app
+      - /app/node_modules
+    depends_on:
+      -  blockchain_gpt
+
+  blockchain_gpt:
+    build: backend/blockchain_gpt
+    ports:
+       - 3040:3040
+    
+    container_name: blockchain_gpt
+    volumes:
+      - ./backend/blockchain_gpt:/app
+      - /app/node_modules
+  
+
+ 
