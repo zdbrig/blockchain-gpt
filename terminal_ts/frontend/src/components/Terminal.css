@@ -35,13 +35,10 @@
     left: 3%;
     overflow-x: hidden;
     box-sizing: border-box;
-    background-color: transparent;
-    border-radius: 20px;
-    border: 15px solid;
-    border-bottom-color: #222222;
-    border-left-color: #050505;
-    border-right-color: #050505;
-    border-top-color: #111111;
+    background-color: #b1803e;
+    border-radius: 25px;
+    border: 8px solid;
+   border-color: #7d5b2d ;
     box-shadow: inset 0 0 10rem #020202, inset 0 0 3rem black, 0 0 10rem black;
   }
   
