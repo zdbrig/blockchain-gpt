@@ -4,6 +4,7 @@ import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "./Home";
 import { SuperTokensConfig } from "./config";
+import Tester from "./tester";
 SuperTokens.init(SuperTokensConfig);
 
 function App() {
@@ -27,6 +28,14 @@ function App() {
                                     </SessionAuth>
                                 }
                             />
+
+                            <Route
+                                path="/test"
+
+                                element={
+                                    <Tester />
+                                        
+                                } />
                         </Routes>
                     </div>
                 </Router>
