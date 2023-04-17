@@ -1,28 +1,28 @@
 async function _connectToMetaMask() {
-    // Check if MetaMask is installed
-    if (typeof window.ethereum === 'undefined') {
-      console.log('Please install MetaMask to use this feature');
-      return null;
-    }
-  
-    // Check if the wallet is already connected
-    if (window.ethereum.selectedAddress !== null) {
-      console.log('You are already connected to MetaMask');
-      return window.ethereum.selectedAddress;
-    }
-  
-    try {
-      // Request permission to access the user's accounts
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      // Save the selected account address to local storage
-      localStorage.setItem('publicKey', accounts[0]);
-      return accounts[0];
-    } catch (error) {
-      // Handle error gracefully
-      console.log('Failed to connect to MetaMask: ' + error.message);
-      return null;
-    }
-  }
+// Check if MetaMask is installed
+if (typeof window.ethereum === 'undefined') {
+console.log('Please install MetaMask to use this feature');
+return null;
+}
+
+// Check if the wallet is already connected
+if (window.ethereum.selectedAddress !== null) {
+console.log('You are already connected to MetaMask');
+return window.ethereum.selectedAddress;
+}
+
+try {
+// Request permission to access the user's accounts
+const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+// Save the selected account address to local storage
+localStorage.setItem('publicKey', accounts[0]);
+return accounts[0];
+} catch (error) {
+// Handle error gracefully
+console.log('Failed to connect to MetaMask: ' + error.message);
+return null;
+}
+}
 
   async function _disconnectFromMetaMask() {
     // Check if MetaMask is installed
