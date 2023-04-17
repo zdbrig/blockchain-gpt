@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: ingress-chatgpttest
+  namespace: chatgpttest
+  annotations:
+
+
+    cert-manager.io/cluster-issuer: letsencrypt-chatgptest
+
+
+spec:
+  tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
+  - hosts:
+    - test.blockchaingpt.app
+    secretName: myingress-cert-chatgpttest
+  ingressClassName: nginx
+  rules:
+  - host: test.blockchaingpt.app
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 3001
+

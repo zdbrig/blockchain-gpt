@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchaingpt-deploy
+  labels:
+    app: deploy-blockchaingpt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-blockchaingpt
+
+  template:
+    metadata:
+      labels:
+        app: deploy-blockchaingpt
+    spec:
+      containers:
+      - name: blockchaingpt-containers
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:gptblock
+        ports:
+        - containerPort: 3040
+

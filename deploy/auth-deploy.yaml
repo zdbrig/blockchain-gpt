@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deploy
+  labels:
+    app: deploy-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-auth
+
+  template:
+    metadata:
+      labels:
+        app: deploy-auth
+    spec:
+      containers:
+      - name: auth-containers
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:aauth1
+        ports:
+        - containerPort: 3001

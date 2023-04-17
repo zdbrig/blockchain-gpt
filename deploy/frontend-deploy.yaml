@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deploy
+  labels:
+    app: deploy-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-frontend
+
+  template:
+    metadata:
+      labels:
+        app: deploy-frontend
+    spec:
+      containers:
+      - name: frontend-containers
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:frontendblockchain
+        ports:
+        - containerPort: 80
+
