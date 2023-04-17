@@ -1,0 +1,23 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "Blockchain GPT",
+    "name_for_model": "blockchain_gpt",
+    "description_for_human": "Plugin for managing blockchain environments using natural language commands.",
+    "description_for_model": "Plugin for managing blockchain environments using natural language commands.",
+    "auth": {
+        "type": "oauth",
+        "url": "https://blockchaingpt.app/authenticate",
+        "client_url": "https://blockchaingpt.app/client_url",
+       "authorization_content_type": "gpt",
+     "scope": "name",
+     "authorization_url": "https://blockchaingpt.app/authorization"
+    },
+    "api": {
+        "type": "openapi",
+        "url": "https://blockchaingpt.app/openapi.yaml",
+        "is_user_authenticated": true
+    },
+    "logo_url": "https://blockchaingpt.app/logo.png",
+    "contact_email": "admin@sqoin.us",
+    "legal_info_url": "https://blockchaingpt.app/legal"
+}

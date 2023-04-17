@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frontend-containers
-        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:frontendblockchain
+        image: uk-london-1.ocir.io/lrqd49b08lgo/novateam:frontendgpt
         ports:
         - containerPort: 80
 

@@ -7,7 +7,7 @@ metadata:
   annotations:
 
 
-    cert-manager.io/cluster-issuer: letsencrypt-chatgptest
+    cert-manager.io/cluster-issuer: letsencrypt-chatgpttest
 
 
 spec:

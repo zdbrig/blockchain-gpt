@@ -1,0 +1,73 @@
+openapi: 3.0.1
+info:
+  title: Blockchain GPT Plugin
+  description: A plugin that allows users to interact with and manage their blockchain environments through natural language commands.
+  version: 'v1'
+servers:
+- url: PLUGIN_HOSTNAME
+paths:
+  /execute-command:
+    post:
+      operationId: executeCommand
+      summary: Execute a command in the blockchain environment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/executeCommandRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/executeCommandResponse'
+  /authenticate:
+    post:
+      operationId: authenticate
+      summary: Authenticate the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authenticateRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authenticateResponse'
+components:
+  schemas:
+    executeCommandRequest:
+      type: object
+      required:
+      - command
+      properties:
+        command:
+          type: string
+          description: The natural language command to execute in the blockchain environment.
+    executeCommandResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          description: The result of the executed command.
+    authenticateRequest:
+      type: object
+      required:
+      - apiKey
+      properties:
+        apiKey:
+          type: string
+          description: The API key provided by the user for authentication.
+    authenticateResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: The access token for the authenticated user.
+
