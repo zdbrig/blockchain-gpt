@@ -14,7 +14,7 @@ const Terminal: React.FC = () => {
   );
   const [connection, setConnection] = useState<any>(
     new window.solanaWeb3.Connection(solanaNetwork)
-  );
+  ); 
 
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {

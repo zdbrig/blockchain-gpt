@@ -1,5 +1,6 @@
-const _getCryptoCurrencyPrice = async (
+export const _getCryptoCurrencyQuote= async (
     cryptoName: string,
+    quote:string,
     date?: string
   ): Promise<number> => {
     cryptoName = cryptoName.toLowerCase();
@@ -21,8 +22,21 @@ const _getCryptoCurrencyPrice = async (
     if (data.error) {
       throw new Error(data.error);
     }
-  
-    return data.market_data.current_price.usd;
-  };
 
-  export {_getCryptoCurrencyPrice};
+    let result;
+    switch (quote) {
+      case 'price':
+        result= data.market_data.current_price.usd;
+      break;
+      
+      case 'marketCap':
+        return data.market_data.market_cap.usd;
+      break;
+
+      case 'volume':
+       result= data.market_data.total_volume.usd;
+        break;
+    }
+    return result;
+   
+  };
