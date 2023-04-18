@@ -24,9 +24,9 @@ services:
       - ./backend/auth:/app
       - /app/node_modules
     depends_on:
-      -  blockchain_gpt
+      -  service-blockchaingpt
 
-  blockchain_gpt:
+  service-blockchaingpt:
     build: backend/blockchain_gpt
     ports:
        - 3040:3040
