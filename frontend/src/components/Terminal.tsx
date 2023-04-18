@@ -33,6 +33,7 @@ const Terminal: React.FC = () => {
     });
   };
 
+
   const _getCryptoCurrencyPrice = async (
     cryptoName: string,
     date?: string
