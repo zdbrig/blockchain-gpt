@@ -23,6 +23,7 @@ export function getWebsiteDomain() {
 }
 
 export const SuperTokensConfig: TypeInput = {
+  framework: "express",
   supertokens: {
     // this is the location of the SuperTokens core.
     connectionURI: String(process.env.URI),
@@ -46,7 +47,7 @@ export const SuperTokensConfig: TypeInput = {
         ThirdPartyEmailPassword.Github({
           clientSecret: String(process.env.GITHUB_CLIENT),
           clientId: String(process.env.GITHUB_SECRET),
-        })
+        }),
       ],
     }),
     Dashboard.init(),

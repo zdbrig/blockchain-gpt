@@ -15,11 +15,11 @@ export function getWebsiteDomain() {
 
 export const SuperTokensConfig = {
     appInfo: {
-        appName: "Blockchain Terminal Domain",
+        appName: "Blockchain Terminal",
         apiDomain: getApiDomain(),
         websiteDomain: getWebsiteDomain(),
         apiBasePath: "/auth",
-        websiteBasePath: "/auth"
+        websiteBasePath: "/auth",
     },
     recipeList: [
         ThirdPartyEmailPassword.init({

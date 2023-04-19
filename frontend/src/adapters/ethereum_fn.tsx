@@ -186,6 +186,9 @@ export const _getBalance = async (
     } else {
       // Retrieve the balance of a specific token
       
+      console.log(ERC20);
+      console.log(window.ERC20);
+      
 
       const contract = new window.Web3.eth.Contract(ERC20.abi, type);      
       balance = await contract.methods.balanceOf(address).call();
