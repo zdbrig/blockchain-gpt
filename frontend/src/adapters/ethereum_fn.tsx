@@ -162,6 +162,7 @@ export const _getBalance = async (
   type = "ether"
 ): Promise<null | number> => {
   const ERC20 = window.ERC20;
+
   // Check if MetaMask is installed
   if (typeof window.ethereum === "undefined") {
     console.log("Please install MetaMask to use this feature");
@@ -182,16 +183,15 @@ export const _getBalance = async (
         method: "eth_getBalance",
         params: [address],
       });
+      
       balance = window.Web3.utils.fromWei(balance, "ether");
     } else {
       // Retrieve the balance of a specific token
-      
-      console.log(ERC20);
-      console.log(window.ERC20);
-      
+      const web3 = new window.Web3(window.web3.currentProvider);
 
-      const contract = new window.Web3.eth.Contract(ERC20.abi, type);      
-      balance = await contract.methods.balanceOf(address).call();
+      const contract = new web3.eth.Contract(ERC20.abi, type); 
+      
+      balance = await contract.methods.balanceOf(address).call();      
       balance = window.Web3.utils.fromWei(balance, "ether");
     }
     return balance;
@@ -226,8 +226,9 @@ export const _deployNewToken = async (
     const account = await _getPublicKey();
 
     // Create the token contract instance
-    const contract = new window.web3.eth.Contract(ERC20.abi);
+    const web3 = new window.Web3(window.web3.currentProvider);
 
+    const contract = new web3.eth.Contract(ERC20.abi); 
     // Build the contract data
     const bytecode = ERC20.bytecode;
     const abi = ERC20.abi;
@@ -239,7 +240,7 @@ export const _deployNewToken = async (
       .encodeABI();
 
     // Get the gas price and estimate the transaction gas limit
-    const gasPrice = await window.web3.eth.getGasPrice();
+    const gasPrice = await web3.eth.getGasPrice();
     const gasLimit = await contract
       .deploy({
         data: bytecode,
@@ -269,14 +270,14 @@ export const _deployNewToken = async (
       typeof signedTransaction
     );
 
-    const transactionHash = await window.web3.eth.sendSignedTransaction(
+    const transactionHash = await web3.eth.sendSignedTransaction(
       signedTransaction.rawTransaction
     );
 
     console.log("Transaction hash ", transactionHash, typeof transactionHash);
 
     // Get the deployed contract address
-    const receipt = await window.web3.eth.getTransactionReceipt(
+    const receipt = await web3.eth.getTransactionReceipt(
       transactionHash
     );
     console.log("Receipt ", receipt, typeof receipt);
