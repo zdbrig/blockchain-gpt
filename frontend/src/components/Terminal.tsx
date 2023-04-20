@@ -1,5 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import "./Terminal.css";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
+import { Connection, PublicKey, Version } from "@solana/web3.js";
 
 const request = require("superagent");
 
@@ -15,6 +17,8 @@ const Terminal: React.FC = () => {
   const [connection, setConnection] = useState<any>(
     new window.solanaWeb3.Connection(solanaNetwork)
   ); 
+  const [solanaWallet, setSolanaWallet]: any = useState(undefined);
+  const [rpcUrlInitial, setRpcUrlInitial] = useState<string>("https://test.novafi.xyz/blockchainnode2");
 
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -342,96 +346,119 @@ const Terminal: React.FC = () => {
   };
 
   //solana functions
-  const _connectToPhantomWallet = async (): Promise<null | string> => {
-    const wallet = window.solanaWalletAdapterWallets.getPhantomWallet();
+  const _connectToPhantomWallet = async (): Promise<null | PhantomWalletAdapter> => {
+
+    //@ts-ignore
+    const provider = window.solana;
+    if (!provider || !provider.isPhantom) {
+      window.open("https://phantom.app/", "_blank");
+      return null;
+    }
+    let wallet = new PhantomWalletAdapter(provider);
 
     if (!wallet) {
+      handleOutput("Please install Phantom Wallet to use this feature")
       console.log("Please install Phantom Wallet to use this feature");
       return null;
     }
 
     if (wallet.connected) {
+      handleOutput("You are already connected to Phantom Wallet")
       console.log("You are already connected to Phantom Wallet");
-      return wallet.publicKey.toBase58();
+      return wallet;
     }
 
     try {
       await wallet.connect();
+      if (!wallet.publicKey) {
+        console.log("No Connected Account");
+        handleOutput("Failed to connect to Phantom Wallet")
+        return null;
+      }
       localStorage.setItem("solanaPublicKey", wallet.publicKey.toBase58());
-      return wallet.publicKey.toBase58();
+      setSolanaWallet(wallet)
+      handleOutput("You are now connected " + wallet.publicKey.toBase58())
+      return wallet;
     } catch (error: any) {
       console.log("Failed to connect to Phantom Wallet: " + error.message);
+      handleOutput("Failed to connect to Phantom Wallet: " + error.message);
       return null;
     }
+
   };
 
-  const _disconnectFromPhantomWallet = async (): Promise<null | void> => {
-    const wallet = window.solanaWalletAdapterWallets.getPhantomWallet();
+  const _disconnectFromPhantomWallet = async (): Promise<null | string> => {
 
-    if (!wallet) {
-      console.log("Please install Phantom Wallet to use this feature");
-      return null;
-    }
-
-    if (!wallet.connected) {
-      console.log("You are already disconnected from Phantom Wallet");
+    if (!solanaWallet || !solanaWallet.connected || !solanaWallet.publicKey) {
+      console.log("This Phantom Wallet is not connected");
+      handleOutput("This Phantom Wallet is not connected, please connect first")
       return null;
     }
 
     try {
-      await wallet.disconnect();
+      await solanaWallet.disconnect();
       localStorage.removeItem("solanaPublicKey");
       console.log("You have successfully disconnected from Phantom Wallet");
+      handleOutput("You have successfully disconnected from Phantom Wallet")
+      return "success"
     } catch (error: any) {
       console.log("Failed to disconnect from Phantom Wallet: " + error.message);
+      handleOutput("Failed to disconnect from Phantom Wallet: " + error.message)
       return null;
     }
   };
 
   const _getSolanaPublicKey = async (): Promise<null | string> => {
-    const wallet = window.solanaWalletAdapterWallets.getPhantomWallet();
 
-    if (!wallet) {
-      console.log("Please install Phantom Wallet to use this feature");
-      return null;
-    }
-
-    if (!wallet.connected) {
-      console.log("You are not connected to Phantom Wallet");
+    if (!solanaWallet || !solanaWallet.connected || !solanaWallet.publicKey) {
+      handleOutput("You are not connected to Phantom Wallet");
       return null;
     }
 
     try {
-      return wallet.publicKey.toBase58();
+      handleOutput(solanaWallet.publicKey.toBase58())
+      return solanaWallet.publicKey.toBase58();
     } catch (error: any) {
-      console.log(
+      handleOutput(
         "Failed to retrieve public key from Phantom Wallet: " + error.message
       );
       return null;
     }
   };
-  const _getSolanaNetworkInfo = async (): Promise<{ rpcUrl: string; networkName: string;}> => {
-    const networkInfo = {
-      rpcUrl: solanaNetwork,
-      networkName: "Solana Mainnet Beta",
-    };
 
-    return networkInfo;
-  };
-  
-  const _getSolanaBalance = async (address: any): Promise<null | number> => {
-    if (!address) {
-      console.log("Invalid address");
-      return null;
-    }
-
+  const _getSolanaNetworkInfo = async (rpcUrl:string): Promise<string | null> => {
     try {
-      const publicKey = new window.solanaWeb3.PublicKey(address);
+      if(!rpcUrl) rpcUrl = rpcUrlInitial
+      let connection = new Connection(rpcUrl)
+      let version: Version = await connection.getVersion()
+      const epochInfo = await connection.getEpochInfo();
+      let endpoint = connection.rpcEndpoint
+      const networkInfo = {
+        endpoint: endpoint,
+        solanaCore: version["solana-core"],
+        featureSet: version["feature-set"],
+        epoch: epochInfo.epoch
+      };
+      handleOutput(JSON.stringify(networkInfo))
+      return JSON.stringify(networkInfo);
+    }
+    catch (error: any) {
+      handleOutput("Error while connection to this RPC URL " + error.message)
+      return "Error while connection to this RPC URL " + error.message;
+    }
+  };
+
+  const _getSolanaBalance = async (address:string): Promise<null | number> => {
+    try {
+      let connection = new Connection(rpcUrlInitial)
+      const publicKey = address?new PublicKey(address):solanaWallet.publicKey;
       const balance = await connection.getBalance(publicKey);
+      if(!balance || typeof balance != 'number')
+      return null
       const lamportsToSol = balance / 1e9;
+      handleOutput("Your balance is " + lamportsToSol)
       return lamportsToSol;
     } catch (error: any) {
-      console.log("Failed to retrieve balance: " + error.message);
       return null;
     }
   };
@@ -458,6 +485,7 @@ const Terminal: React.FC = () => {
         return `Error: ${error.message} \n script ${scriptContent}`;
       }
     } else {
+      commandWriter("This input does not require any specific action.")
       return `${data}\n`;
     }
   };
@@ -508,7 +536,7 @@ const Terminal: React.FC = () => {
 
   return (
     <div className="terminal">
-      <div className="terminal-output">
+      <div className="terminal-output" style={{ whiteSpace: "pre-wrap" , wordWrap: "break-word" }}>
         {output.map((line, index) => (
           <div key={index}>
             <span className="terminal-prompt">$</span> {line.command}
