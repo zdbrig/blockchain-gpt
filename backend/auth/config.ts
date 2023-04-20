@@ -23,6 +23,7 @@ export function getWebsiteDomain() {
 }
 
 export const SuperTokensConfig: TypeInput = {
+  framework: "express",
   supertokens: {
     // this is the location of the SuperTokens core.
     connectionURI: String(process.env.URI),
@@ -32,7 +33,7 @@ export const SuperTokensConfig: TypeInput = {
     appName: "Blockcahin Terminal",
     apiDomain: getApiDomain(),
     websiteDomain: getWebsiteDomain(),
-    apiBasePath: "/auth",
+    apiBasePath: "/api/auth",
     websiteBasePath: "/auth",
   },
   // recipeList contains all the modules that you want to
@@ -44,9 +45,9 @@ export const SuperTokensConfig: TypeInput = {
           clientSecret: String(process.env.CLIENT_SECRET),
         }),
         ThirdPartyEmailPassword.Github({
-          clientSecret: String(process.env.GITHUB_CLIENT),
-          clientId: String(process.env.GITHUB_SECRET),
-        })
+          clientId: String(process.env.L_GITHUB_CLIENT),
+          clientSecret: String(process.env.L_GITHUB_SECRET),
+        }),
       ],
     }),
     Dashboard.init(),

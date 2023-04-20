@@ -4,14 +4,32 @@ import {_isConnectedToMetamask, _connectToMetaMask, _disconnectFromMetaMask , _g
 const Ethereum: React.FC = () => {
   const [publicKey, setPublicKey] = useState<string | undefined>(undefined);
   const [balance, setBalance] = useState<number | null >(null);
+  const [balanceToken, setBalanceToken] = useState<number | null >(null);
   const [network, setNetwork] = useState<{ chainId: string; networkId: number; networkName: string; } | null>(null);
   const [connected , setConnected] = useState<boolean|undefined>(undefined);
+   const [newToken,setNewToken] =useState<string|null>('');
 
   const [token, setToken] = useState('');
 
-  const handleChange = async (event:any) => {
+  const [name, setName] = useState('');
+
+
+  const [supply, setSupply] = useState();
+
+
+  const handleChangeToken = async (event:any) => {
     setToken(event.target.value);
   }
+
+  const handleChangeName = async (event:any) => {
+    setName(event.target.value);
+  }
+
+  const handleChangeSupply = async (event:any) => {
+    setSupply(event.target.value);
+  }
+
+
 
   const handleClick = async (fn :any) => {
    switch (fn) {
@@ -72,11 +90,19 @@ const Ethereum: React.FC = () => {
     case 'balance_token':
         try{
             
-            let address = await _getPublicKey();
-            console.log(token);
-            
+            let address = await _getPublicKey();            
             let result= await  _getBalance(address,token);
-            setBalance(result)
+            setBalanceToken(result)
+        }catch(error){
+            console.error(error);
+        }
+    break;
+    case 'deploy':
+        try{
+            
+            
+            let result= await  _deployNewToken(name,supply)
+            setNewToken(result)
         }catch(error){
             console.error(error);
         }
@@ -105,10 +131,14 @@ const Ethereum: React.FC = () => {
       <div>{balance ? `${balance}` : "Click the button to get balance "}</div>
 
       <button onClick={(e:any)=>handleClick('balance_token')}>Get your wallet balance by token</button>
-      <input type="text" value={token} onChange={handleChange}  placeholder="token address" id="token"></input>
-      <div>{balance ? `${balance}` : "Click the button to get token balance "}</div>
+      <input type="text" value={token} onChange={handleChangeToken}  placeholder="token address" id="token"></input>
+      <div>{balanceToken ? `${balanceToken}` : "Click the button to get token balance "}</div>
 
-      
+      <button onClick={(e:any)=>handleClick('deploy')}>Deploy new token</button>
+      <input type="text" value={name} onChange={handleChangeName}  placeholder="token name" id="name"></input>
+      <input type="number" value={supply} onChange={handleChangeSupply}  placeholder="token supply" id="supply"></input>
+
+      <div>{newToken ? `${newToken}` : "Click the button to deploy new token "}</div>
     </div>
   );
 };

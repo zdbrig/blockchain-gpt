@@ -462,6 +462,7 @@ const Terminal: React.FC = () => {
       return null;
     }
   };
+  
   type CommandWriter = (message?: any, ...optionalParams: any[]) => void;
 
   const processServerResponse = async (
