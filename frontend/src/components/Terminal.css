@@ -70,9 +70,7 @@
   .terminal-output div { /* Update this selector */
     font-size: 24px;
     margin: 1px 0;
-    white-space: nowrap;
     overflow: hidden;
-    animation: type 2.5s steps(60, end) backwards;
     color: #f6ff01;
     font-family: "VT323", monospace;
     word-wrap: break-word;
