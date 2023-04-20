@@ -6,5 +6,5 @@ interface Window {
     Web3:any;
     solanaWeb3:any;
     solanaWalletAdapterWallets:any;
-    ethers:any
+    ethers:any;
   }
