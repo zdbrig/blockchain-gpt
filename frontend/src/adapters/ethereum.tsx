@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
-import {_isConnectedToMetamask, _connectToMetaMask, _disconnectFromMetaMask , _getPublicKey , _getNetworkInfo , _getBalance , _deployNewToken } from "./ethereum_fn";
+import React, { useEffect, useRef, useState } from "react";
+import {_isConnectedToMetamask, _connectToMetaMask, _disconnectFromMetaMask , _getPublicKey , _getNetworkInfo , _getBalance , _deployNewToken  } from "./ethereum_fn";
+import { _swap } from "./swap";
 
 const Ethereum: React.FC = () => {
   const [publicKey, setPublicKey] = useState<string | undefined>(undefined);
@@ -16,6 +17,34 @@ const Ethereum: React.FC = () => {
 
   const [supply, setSupply] = useState();
 
+
+  const weth='0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
+  const uni='0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
+
+
+
+  const [balanceWeth, setBalanceWeth] = useState<number | null >(null);
+  const [balanceUni, setBalanceUni] = useState<number | null >(null);
+
+
+  const [balanceWethBefore, setBalanceWethBefore] = useState<number | null >(null);
+  const [balanceUniBefore, setBalanceUniBefore] = useState<number | null >(null);
+
+useEffect(() => {
+    const init = async () => {
+      try {
+        let address = await _getPublicKey();
+        let init_weth_balance=await  _getBalance(address,weth);
+        setBalanceWethBefore(init_weth_balance)
+        let init_uni_balance= await _getBalance(address,uni);
+        setBalanceUniBefore(init_uni_balance)
+      } catch (error) {
+        console.error('Error getting data:', error);
+      }
+    };
+
+    init();
+  }, [balanceUni,balanceWeth]);
 
   const handleChangeToken = async (event:any) => {
     setToken(event.target.value);
@@ -107,6 +136,22 @@ const Ethereum: React.FC = () => {
             console.error(error);
         }
     break;
+    case 'swap':
+        try{
+        let address = await _getPublicKey();            
+        
+        let result= await  _swap();
+
+        let balance1= await  _getBalance(address,weth);
+        setBalanceWeth(balance1);
+
+        
+        let balance2= await _getBalance(address,uni);
+        setBalanceUni(balance2);
+        }catch(error){
+            console.error(error);
+        }
+    break;
     default:
         break;
    }
@@ -139,6 +184,11 @@ const Ethereum: React.FC = () => {
       <input type="number" value={supply} onChange={handleChangeSupply}  placeholder="token supply" id="supply"></input>
 
       <div>{newToken ? `${newToken}` : "Click the button to deploy new token "}</div>
+
+
+      <button onClick={(e:any)=>handleClick('swap')}>Swap</button>
+      <div>{balanceWeth ? "Your Weth Balance after swap :" +`${balanceWeth}` : " Your init Weth Balance " + `${balanceWethBefore}` }</div>
+      <div>{balanceUni ?"Your Uniswap token Balance after swap :" + `${balanceUni}` : " Your init Uniswap token Balance " + `${balanceUniBefore}`}</div>
 
 
 

@@ -9,16 +9,20 @@
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
         "@types/jest": "^27.5.2",
-        "@types/node": "^16.11.56",
+        "@types/node": "^16.18.24",
         "@types/react": "^18.0.18",
         "@types/react-dom": "^18.0.6",
-        "ethers": "^6.3.0",
+        "@uniswap/v3-core": "^1.0.1",
+        "@uniswap/v3-periphery": "^1.4.3",
         "axios": "^0.21.4",
-        "react": "^18.2.0",
-        "query-string": "^6.14.1",
-        "react-chartjs-2": "^4.3.1",
         "chart.js": "^3.5.0",
         "chartjs-plugin-annotation": "^1.1.0",
+        "ethers": "^5.7.2",
+        "http": "^0.0.1-security",
+        "path": "^0.12.7",
+        "query-string": "^6.14.1",
+        "react": "^18.2.0",
+        "react-chartjs-2": "^4.3.1",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.2.1",
         "react-scripts": "5.0.1",
@@ -26,8 +30,6 @@
         "supertokens-auth-react": "latest",
         "typescript": "^4.8.2",
         "web-vitals": "^2.1.4"
-      
-      
     },
     "scripts": {
         "start": "react-scripts start",
@@ -55,6 +57,8 @@
     },
     "proxy": "http://authentification:3001",
     "devDependencies": {
-        "@types/superagent": "^4.1.16"
+        "@types/superagent": "^4.1.16",
+        "@types/node": "^18.11.9",
+        "tslib": "^2.4.1"
     }
 }
