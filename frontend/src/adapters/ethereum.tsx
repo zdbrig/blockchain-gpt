@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import {_isConnectedToMetamask, _connectToMetaMask, _disconnectFromMetaMask , _getPublicKey , _getNetworkInfo , _getBalance , _deployNewToken } from "./ethereum_fn";
+import {_isConnectedToMetamask, _connectToMetaMask, _disconnectFromMetaMask , _getPublicKey , _getNetworkInfo , _getBalance , _deployNewToken , _swap } from "./ethereum_fn";
 
 const Ethereum: React.FC = () => {
   const [publicKey, setPublicKey] = useState<string | undefined>(undefined);
@@ -107,6 +107,15 @@ const Ethereum: React.FC = () => {
             console.error(error);
         }
     break;
+    case 'swap':
+        try{
+            
+            
+            let result= await  _swap(publicKey)
+        }catch(error){
+            console.error(error);
+        }
+    break;
     default:
         break;
    }
@@ -139,6 +148,10 @@ const Ethereum: React.FC = () => {
       <input type="number" value={supply} onChange={handleChangeSupply}  placeholder="token supply" id="supply"></input>
 
       <div>{newToken ? `${newToken}` : "Click the button to deploy new token "}</div>
+
+
+      <button onClick={(e:any)=>handleClick('swap')}>Swap</button>
+
     </div>
   );
 };
