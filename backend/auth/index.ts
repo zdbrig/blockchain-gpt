@@ -36,7 +36,6 @@ app.use(
       contentSecurityPolicy: false,
   })
 );
-
 // This exposes all the APIs from SuperTokens to the client.
 app.use(middleware());
 
@@ -80,6 +79,8 @@ app.post("/gpt-test", verifySession(), async (req: SessionRequest, res) => {
     res.json({ loggedIn: false });
   }
 });
+// app.use('/api', app);
+
 app.use(errorHandler());
 
 app.use((err:any, req:any, res:any, next:any) => {
