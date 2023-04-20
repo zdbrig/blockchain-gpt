@@ -11,6 +11,7 @@ interface Output {
 const Terminal: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<Output[]>([]);
+  const [remainingRequests, setRemainingRequests] = useState(2); // Define the remainingRequests variable
   const [solanaNetwork, setSolanaNetwork] = useState<string>(
     "https://api.mainnet-beta.solana.com"
   );
@@ -19,6 +20,16 @@ const Terminal: React.FC = () => {
   ); 
   const [solanaWallet, setSolanaWallet]: any = useState(undefined);
   const [rpcUrlInitial, setRpcUrlInitial] = useState<string>("https://test.novafi.xyz/blockchainnode2");
+
+  // Set the value of `isUserPaid` based on some condition
+  const isUserPaid = true; // Example value, replace with your own logic
+  type UserType = "free" | "paid";
+
+  const MAX_REQUESTS_FREE_USER = 2;
+  const MAX_REQUESTS_PAID_USER = 10;
+
+  let userRequestCount: Map<string, number> = new Map();
+
 
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -36,8 +47,7 @@ const Terminal: React.FC = () => {
         });
     });
   };
-
-
+  
   const _getCryptoCurrencyPrice = async (
     cryptoName: string,
     date?: string
@@ -448,6 +458,8 @@ const Terminal: React.FC = () => {
     }
   };
 
+ 
+
   const _getSolanaBalance = async (address:string): Promise<null | number> => {
     try {
       let connection = new Connection(rpcUrlInitial)
@@ -500,25 +512,64 @@ const Terminal: React.FC = () => {
   ): Promise<void> => {
     event.preventDefault();
     handleOutput(input);
+    let remainingResult = await remaining() ;
     if (input.trim().toLowerCase() === "clear") {
       setOutput([]);
       setInput("");
     } else {
-      handleOutput("Execution in progress ...");
-      try {
-        let result;
-        const res = await getData(input);
-        result = await processServerResponse(res.text, handleOutput);
-        setInput("");
-      } catch (error: any) {
-        handleOutput(`Error: ${error.message}\n`);
+      if(remainingResult < 3){
+        try {
+          let result;  
+         
+          setTimeout(async() => {
+          handleOutput(`Execution in progress ...\n Remaining requests: ${remainingResult}`);
+          if (remainingResult > 0){
+            const res = await getData(input);
+            result = await processServerResponse(res.text, handleOutput);
+            setInput("");
+            setRemainingRequests(remainingResult-1);
+          }else{
+            handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
+          }
+          }, 2000);
+          
+        } catch (error: any) {
+          handleOutput(`Error: ${error.message}\n`);
+        }
       }
+      
+    
     }
   };
+ 
+  
+  const remaining = async () =>{
+     // Get the user type based on whether the user has paid or not
+     const userType = isUserPaid ? "free" : "paid";
+     // Get the current request count for the user
+     let requestCount = 0;
+  
+     // Calculate the remaining request count for the user
+    
+    if(userType === "free"){
+      setRemainingRequests(MAX_REQUESTS_FREE_USER - requestCount) ;
+    }else{
+      setRemainingRequests(MAX_REQUESTS_PAID_USER - requestCount);
+    }
 
+     if (remainingRequests <= 0) {
+       handleOutput(`Error: Maximum request limit reached ! \n`);
+       return remainingRequests;
+     } else {
+      requestCount++;
+      return remainingRequests;
+         
+  }
+}
   const handleOutput = (new_output: string): void => {
     setOutput([...output, { command: new_output }]);
   };
+ 
 
 
   
@@ -552,6 +603,7 @@ const Terminal: React.FC = () => {
             className="terminal-input"
             value={input}
             onChange={handleInputChange}
+            disabled={remainingRequests > 2}
           />
         </div>
       </form>
@@ -560,3 +612,7 @@ const Terminal: React.FC = () => {
 };
 
 export default Terminal;
+function setInputDisabled(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+
