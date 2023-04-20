@@ -18,7 +18,7 @@ const Terminal: React.FC = () => {
     new window.solanaWeb3.Connection(solanaNetwork)
   ); 
   const [solanaWallet, setSolanaWallet]: any = useState(undefined);
-  const [rpcUrl, setRpcUrl] = useState<string>("https://test.novafi.xyz/blockchainnode2");
+  const [rpcUrlInitial, setRpcUrlInitial] = useState<string>("https://test.novafi.xyz/blockchainnode2");
 
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -426,8 +426,9 @@ const Terminal: React.FC = () => {
     }
   };
 
-  const _getSolanaNetworkInfo = async (): Promise<string | null> => {
+  const _getSolanaNetworkInfo = async (rpcUrl:string): Promise<string | null> => {
     try {
+      if(!rpcUrl) rpcUrl = rpcUrlInitial
       let connection = new Connection(rpcUrl)
       let version: Version = await connection.getVersion()
       const epochInfo = await connection.getEpochInfo();
@@ -443,20 +444,21 @@ const Terminal: React.FC = () => {
     }
     catch (error: any) {
       handleOutput("Error while connection to this RPC URL " + error.message)
-      return null;
+      return "Error while connection to this RPC URL " + error.message;
     }
   };
 
-  const _getSolanaBalance = async (): Promise<null | number> => {
+  const _getSolanaBalance = async (address:string): Promise<null | number> => {
     try {
-      let connection = new Connection(rpcUrl)
-      const publicKey = solanaWallet.publicKey;
+      let connection = new Connection(rpcUrlInitial)
+      const publicKey = address?new PublicKey(address):solanaWallet.publicKey;
       const balance = await connection.getBalance(publicKey);
+      if(!balance || typeof balance != 'number')
+      return null
       const lamportsToSol = balance / 1e9;
       handleOutput("Your balance is " + lamportsToSol)
       return lamportsToSol;
     } catch (error: any) {
-      handleOutput("Failed to retrieve balance: " + error.message);
       return null;
     }
   };
@@ -483,6 +485,7 @@ const Terminal: React.FC = () => {
         return `Error: ${error.message} \n script ${scriptContent}`;
       }
     } else {
+      commandWriter("This input does not require any specific action.")
       return `${data}\n`;
     }
   };
@@ -518,7 +521,7 @@ const Terminal: React.FC = () => {
 
   return (
     <div className="terminal">
-      <div className="terminal-output">
+      <div className="terminal-output" style={{ whiteSpace: "pre-wrap" , wordWrap: "break-word" }}>
         {output.map((line, index) => (
           <div key={index}>
             <span className="terminal-prompt">$</span> {line.command}
