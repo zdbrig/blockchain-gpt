@@ -36,9 +36,12 @@ Those links contain the process step-by-step
 
 5. Go frontend , create .env file and set value
     * SKIP_PREFLIGHT_CHECK=true
-    * it takes true or false: 
-        * true : ignore eslint check
-        * false : dont ignore eslint check
+     * it takes true or false: 
+         * true : ignore eslint check
+         * false : dont ignore eslint check
+    * REACT_APP_INFURA= /* your infura key */
+    * REACT_APP_WALLET=/* your wallet address  */
+    * REACT_APP_PRIVATE_KEY=/* your private key*/
 
 
 ## Run
