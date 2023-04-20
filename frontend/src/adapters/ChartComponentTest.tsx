@@ -5,12 +5,14 @@ import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
 import 'chartjs-plugin-annotation';
 import { ChartDataset } from 'chart.js/auto';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
+
 
 // Register the scales and elements
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement);
 
+interface ChartComponentProps {
+    coinName: string;
+  }
   
   interface ChartData {
     labels: string[];
@@ -19,14 +21,11 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineElement);
   }
 
   
-  const ChartComponent:React.FC = () => {
+  const ChartComponentTest:React.FC = () => {
 
-   
-    const location = useLocation();
-    const queryParams = queryString.parse(location.search);
-    const coinName = queryParams['coinName'] as string;
-    const vsCurrency = queryParams['vsCurrency'] as string;
-    const days = parseInt(queryParams['days'] as string);
+    const [vsCurrency, setVsCurrency] = useState<string>("");
+    const [coinName, setCoinName] = useState<string>("");
+    const [days, setDays] = useState<number>();
     const [interval, setInterval] = useState<string>("daily");
     const [chartData, setChartData] = useState<ChartData>({
         labels: [],
@@ -49,9 +48,23 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineElement);
           };
         });
       };
-      useEffect(() => {
-        const fetchData = async () => {
-          if (!vsCurrency || !days || !coinName ) {
+      
+      
+      const handleVsCurrencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setVsCurrency(event.target.value);
+      };
+    
+      const handleDaysChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDays(parseInt(event.target.value));
+      };
+    
+      const handleIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInterval(event.target.value);
+      };
+    
+  
+      const fetchChartData = async () => {
+        if (!vsCurrency || !days || !coinName ) {
             alert("Please enter a valid vs_currency and days and coinName ")
             
             return;
@@ -100,21 +113,36 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineElement);
         } catch (error) {
           console.error("Error fetching chart data:", error);
         }
-        }
-      
-        fetchData();
-      }, []);
-      
-  
-  
-    
+      };
 
   
    
   
       return (
         <div>
-         
+            <div>
+                <input
+                type="text"
+                value={coinName}
+                onChange={(e) => setCoinName(e.target.value)}
+                placeholder="Enter coin name"
+                />
+                 <div>
+                <label>vs_currency:</label>
+                <input type="text" value={vsCurrency} onChange={handleVsCurrencyChange} />
+                </div>
+                <div>
+                <label>days:</label>
+                <input type="number" value={days} onChange={handleDaysChange} />
+                </div>
+                <div>
+                <label>interval:</label>
+                <input type="text" value={interval} onChange={handleIntervalChange} />
+                </div>
+                <button onClick={fetchChartData}>Submit</button>
+                
+          </div>
+           
           {chartData ? (
             <div>
               <div>
@@ -194,4 +222,4 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineElement);
   
 };
 
-export default ChartComponent;
+export default ChartComponentTest;

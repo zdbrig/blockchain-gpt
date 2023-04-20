@@ -5,6 +5,7 @@ import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "./Home";
 import { SuperTokensConfig } from "./config";
 import Tester from "./tester";
+import ChartComponent from "./adapters/ChartComponent";
 SuperTokens.init(SuperTokensConfig);
 
 function App() {
@@ -36,6 +37,14 @@ function App() {
                                     <Tester />
                                         
                                 } />
+
+                              <Route
+                                path="/statics"
+
+                                element={
+                                    <ChartComponent />
+                                        
+                                } /> 
                         </Routes>
                     </div>
                 </Router>

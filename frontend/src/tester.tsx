@@ -1,7 +1,7 @@
 import React from 'react';
 import CryptoPrice from './adapters/cryptoprice';
 import Ethereum from './adapters/ethereum';
-import Charts from './adapters/charts';
+import ChartComponentTest from './adapters/ChartComponentTest';
 
 
 const Tester: React.FC = () => {
@@ -13,7 +13,7 @@ const Tester: React.FC = () => {
       <Ethereum></Ethereum>
     
       <h1> charts: </h1>
-      <Charts></Charts>
+      <ChartComponentTest></ChartComponentTest>
     </div>
   );
 };

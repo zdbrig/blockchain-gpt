@@ -491,6 +491,21 @@ const Terminal: React.FC = () => {
     setOutput([...output, { command: new_output }]);
   };
 
+
+  
+  const _getStatics = async (
+    coinName: string  ,
+     vsCurrency: string , 
+    days: number 
+  ): Promise<string> => {
+
+    const interfaceUrl = `/statics?coinName=${coinName}&vsCurrency=${vsCurrency}&days=${days}`;
+    window.open(interfaceUrl, '_blank');
+    return 'you will find your request on the statics page '
+
+   
+  };
+
   return (
     <div className="terminal">
       <div className="terminal-output">

@@ -26,3 +26,4 @@ async function _getSolanaBalance(address);
 Coin Info:
 async function _getCryptoCurrencyPrice(cryptoName /* full crypto name in lower case */, date /* dd-mm-yyyy */):Price;
 async function _getCurrentCryptoCurrencyPrice(cryptoName /* full crypto name in lower case */): Price;
+async function _getStatics(coinName /* full crypto name in lower case */ , vsCurrency /* full crypto name in lower case */ , days /* number */)
