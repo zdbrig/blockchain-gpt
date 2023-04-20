@@ -9,12 +9,21 @@ interface Output {
 const Terminal: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<Output[]>([]);
+  const [remainingRequests, setRemainingRequests] = useState(2); // Define the remainingRequests variable
   const [solanaNetwork, setSolanaNetwork] = useState<string>(
     "https://api.mainnet-beta.solana.com"
   );
   const [connection, setConnection] = useState<any>(
     new window.solanaWeb3.Connection(solanaNetwork)
-  ); 
+  );
+  // Set the value of `isUserPaid` based on some condition
+  const isUserPaid = true; // Example value, replace with your own logic
+  type UserType = "free" | "paid";
+
+  const MAX_REQUESTS_FREE_USER = 2;
+  const MAX_REQUESTS_PAID_USER = 10;
+
+  let userRequestCount: Map<string, number> = new Map();
 
   const getData = (input: string): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -32,8 +41,7 @@ const Terminal: React.FC = () => {
         });
     });
   };
-
-
+  
   const _getCryptoCurrencyPrice = async (
     cryptoName: string,
     date?: string
@@ -410,7 +418,10 @@ const Terminal: React.FC = () => {
       return null;
     }
   };
-  const _getSolanaNetworkInfo = async (): Promise<{ rpcUrl: string; networkName: string;}> => {
+  const _getSolanaNetworkInfo = async (): Promise<{
+    rpcUrl: string;
+    networkName: string;
+  }> => {
     const networkInfo = {
       rpcUrl: solanaNetwork,
       networkName: "Solana Mainnet Beta",
@@ -418,7 +429,7 @@ const Terminal: React.FC = () => {
 
     return networkInfo;
   };
-  
+
   const _getSolanaBalance = async (address: any): Promise<null | number> => {
     if (!address) {
       console.log("Invalid address");
@@ -466,30 +477,154 @@ const Terminal: React.FC = () => {
     setInput(event.target.value);
   };
 
-  const handleInputSubmit = async (
+  /*const handleInputSubmit = async (
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
     handleOutput(input);
+  
     if (input.trim().toLowerCase() === "clear") {
       setOutput([]);
       setInput("");
     } else {
       handleOutput("Execution in progress ...");
+  
       try {
         let result;
-        const res = await getData(input);
+  
+        // Get the user type based on whether the user has paid or not
+        const userType = isUserPaid ? "paid" : "free";
+  
+        const res = await getData(input, userType);
         result = await processServerResponse(res.text, handleOutput);
         setInput("");
       } catch (error: any) {
         handleOutput(`Error: ${error.message}\n`);
       }
     }
+  };*/
+  /*const handleInputSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+    handleOutput(input);
+  
+    if (input.trim().toLowerCase() === "clear") {
+      setOutput([]);
+      setInput("");
+    } else {
+      handleOutput("Execution in progress ...");
+  
+      try {
+        let result;
+  
+        // Get the user type based on whether the user has paid or not
+        const userType = isUserPaid ? "free" : "paid";
+  
+        const userRequestKey = `${userType}:${input}`;
+  
+        console.log(`userRequestKey: ${userRequestKey}`);
+  
+        // Get the current request count for the user
+        let requestCount = userRequestCount.get(userRequestKey) || 0;
+  
+        // Calculate the remaining request count for the user
+        const remainingRequests = userType === "free"
+          ? (MAX_REQUESTS_FREE_USER - requestCount)
+          : (MAX_REQUESTS_PAID_USER - requestCount);
+        console.log(MAX_REQUESTS_FREE_USER - requestCount)
+        console.log(`userRequestCount: ${userRequestCount}`);
+        console.log(`requestCount: ${requestCount}`);
+        console.log(`remainingRequests: ${remainingRequests}`);
+  
+        if (remainingRequests <= 0) {
+          handleOutput(`Error: Maximum request limit reached for ${userRequestKey}\n`);
+        } else {
+          console.log({remainingRequests})
+          handleOutput(`Remaining requests: ${remainingRequests}`);
+  
+          const res = await getData(input, userType);
+          console.log({res})
+          requestCount++;
+  
+          userRequestCount.set(userRequestKey, requestCount);
+  
+          console.log(`userRequestCount: ${userRequestCount}`);
+          console.log(`requestCount: ${requestCount}`);
+  
+          result = await processServerResponse(res.text, handleOutput);
+          setInput("");
+        }
+      } catch (error: any) {
+        handleOutput(`Error: ${error.message}\n`);
+      }
+    }
+  };*/
+  
+  
+  const handleInputSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+    handleOutput(input);
+    let remainingResult = await remaining() ;
+    if (input.trim().toLowerCase() === "clear") {
+      setOutput([]);
+      setInput("");
+    } else {
+      if(remainingResult < 3){
+        try {
+          let result;  
+         
+          setTimeout(async() => {
+          handleOutput(`Execution in progress ...\n Remaining requests: ${remainingResult}`);
+          if (remainingResult > 0){
+            const res = await getData(input);
+            result = await processServerResponse(res.text, handleOutput);
+            setInput("");
+            setRemainingRequests(remainingResult-1);
+          }else{
+            handleOutput(`Error: Maximum request limit reached !! Please upgrade to a paid account to continue using this feature.`);
+          }
+          }, 2000);
+          
+        } catch (error: any) {
+          handleOutput(`Error: ${error.message}\n`);
+        }
+      }
+      
+    
+    }
   };
+ 
+  
+  const remaining = async () =>{
+     // Get the user type based on whether the user has paid or not
+     const userType = isUserPaid ? "free" : "paid";
+     // Get the current request count for the user
+     let requestCount = 0;
+  
+     // Calculate the remaining request count for the user
+    
+    if(userType === "free"){
+      setRemainingRequests(MAX_REQUESTS_FREE_USER - requestCount) ;
+    }else{
+      setRemainingRequests(MAX_REQUESTS_PAID_USER - requestCount);
+    }
 
+     if (remainingRequests <= 0) {
+       handleOutput(`Error: Maximum request limit reached ! \n`);
+       return remainingRequests;
+     } else {
+      requestCount++;
+      return remainingRequests;
+         
+  }
+}
   const handleOutput = (new_output: string): void => {
     setOutput([...output, { command: new_output }]);
   };
+ 
 
   return (
     <div className="terminal">
@@ -508,6 +643,7 @@ const Terminal: React.FC = () => {
             className="terminal-input"
             value={input}
             onChange={handleInputChange}
+            disabled={remainingRequests > 2}
           />
         </div>
       </form>
@@ -516,3 +652,7 @@ const Terminal: React.FC = () => {
 };
 
 export default Terminal;
+function setInputDisabled(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+
