@@ -1,6 +1,9 @@
 import  IUniswapV3PoolABI  from "@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json";
 import  SwapRouterABI from '@uniswap/v3-periphery/artifacts/contracts/interfaces/ISwapRouter.sol/ISwapRouter.json';
 
+
+// import a from '@uniswap/v3-periphery/artifacts/contracts/interfaces/'
+
 import   ERC20ABI  from './../ERC20ABI.json';
 
 const {ethers} = require ('ethers')
@@ -100,17 +103,30 @@ interface Immutables {
     return PoolState
   }
 
-  
-export const _swap =async ()=> {
-  const immutables = await getPoolImmutables()
-  const state = await getPoolState()
 
+
+
+  
 
   const swapRouterContract  = new ethers.Contract(
     swapRouterAddress,
     SwapRouterABI.abi,
     provider
   )
+
+  // async function getPoolAddress(){
+
+  //   let a = await.swapRouterAddress.
+  // }
+
+export const _swap =async ()=> {
+  console.log(swapRouterContract)
+
+  const immutables = await getPoolImmutables()
+  const state = await getPoolState()
+
+
+
 
   const inputAmount = 0.001
   // .001 => 1 000 000 000 000 000

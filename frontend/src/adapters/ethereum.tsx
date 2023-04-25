@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import {_isConnectedToMetamask, _connectToMetaMask, _disconnectFromMetaMask , _getPublicKey , _getNetworkInfo , _getBalance , _deployNewToken  } from "./ethereum_fn";
 import { _swap } from "./swap";
 
+import {swapTokens} from "./swap_signer"
+import { BigNumber } from "ethers";
+
 const Ethereum: React.FC = () => {
   const [publicKey, setPublicKey] = useState<string | undefined>(undefined);
   const [balance, setBalance] = useState<number | null >(null);
@@ -13,8 +16,7 @@ const Ethereum: React.FC = () => {
   const [token, setToken] = useState('');
 
   const [name, setName] = useState('');
-
-
+  const [symbol, setSymbol] = useState('');
   const [supply, setSupply] = useState();
 
 
@@ -44,7 +46,7 @@ useEffect(() => {
     };
 
     init();
-  }, [balanceUni,balanceWeth]);
+  }, []);
 
   const handleChangeToken = async (event:any) => {
     setToken(event.target.value);
@@ -58,6 +60,9 @@ useEffect(() => {
     setSupply(event.target.value);
   }
 
+  const handleChangeSymbol = async (event:any) => {
+    setSymbol(event.target.value);
+  }
 
 
   const handleClick = async (fn :any) => {
@@ -128,26 +133,49 @@ useEffect(() => {
     break;
     case 'deploy':
         try{
+            console.log(name , symbol, supply);
             
-            
-            let result= await  _deployNewToken(name,supply)
+            let result= await  _deployNewToken(name,symbol,supply)
+
+            //await result.
             setNewToken(result)
         }catch(error){
             console.error(error);
         }
     break;
     case 'swap':
+        const edit_balance = async (balance1:any,balance2:any)=>{
+            setBalanceWeth(balance1);
+            setBalanceUni(balance2);
+
+        }
         try{
         let address = await _getPublicKey();            
         
         let result= await  _swap();
 
         let balance1= await  _getBalance(address,weth);
-        setBalanceWeth(balance1);
 
         
         let balance2= await _getBalance(address,uni);
-        setBalanceUni(balance2);
+        
+        await edit_balance(balance1,balance2);
+
+
+
+        }catch(error){
+            console.error(error);
+        }
+    break;
+
+    case 'swap2':
+
+        try{
+            const tokenin = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';  //weth
+            const tokenout ='0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'; //uni
+            const amount = BigNumber.from('1000000000000000');
+            const account = await _getPublicKey()
+            await swapTokens(tokenin,tokenout,amount,account);       
         }catch(error){
             console.error(error);
         }
@@ -181,7 +209,8 @@ useEffect(() => {
 
       <button onClick={(e:any)=>handleClick('deploy')}>Deploy new token</button>
       <input type="text" value={name} onChange={handleChangeName}  placeholder="token name" id="name"></input>
-      <input type="number" value={supply} onChange={handleChangeSupply}  placeholder="token supply" id="supply"></input>
+      <input type="text" value={symbol} onChange={handleChangeSymbol}  placeholder="token symbol" id="symbol"></input>
+      <input  type="number"  value={supply} onChange={handleChangeSupply}  placeholder="token supply" id="supply"></input>
 
       <div>{newToken ? `${newToken}` : "Click the button to deploy new token "}</div>
 
@@ -190,7 +219,7 @@ useEffect(() => {
       <div>{balanceWeth ? "Your Weth Balance after swap :" +`${balanceWeth}` : " Your init Weth Balance " + `${balanceWethBefore}` }</div>
       <div>{balanceUni ?"Your Uniswap token Balance after swap :" + `${balanceUni}` : " Your init Uniswap token Balance " + `${balanceUniBefore}`}</div>
 
-
+     <button onClick={(e:any)=>handleClick('swap2')}>Swap2</button>
 
     </div>
   );

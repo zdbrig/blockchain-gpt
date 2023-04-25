@@ -15,8 +15,9 @@ async function _connectToMetaMask(); /* only call when user ask to connect his w
 async function _getPublicKey();
 async function _getNetworkInfo();
 async function _disconnectFromMetaMask();/* only call when user ask to disconnect his wallet */
-async function _deployNewToken(supply, name):address;
+async function _deployNewToken(name,symbol,supply):address;
 async function _getBalance(address, type /* 'ether' or the token address */ );
+async function _swapTokens(tokenInAddress,tokenOutAddress,amountIn, account);
 Solana: 
 async function _connectToPhantomWallet();
 async function _disconnectFromPhantomWallet();

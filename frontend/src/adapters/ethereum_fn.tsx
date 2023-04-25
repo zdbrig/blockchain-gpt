@@ -1,3 +1,7 @@
+import { Contract } from "ethers";
+
+const {ethers} = require ('ethers')
+
 export const _isConnectedToMetamask = async (): Promise<boolean> => {
   if (typeof window.ethereum === "undefined") {
     console.log("Please install MetaMask to use this feature");
@@ -7,7 +11,7 @@ export const _isConnectedToMetamask = async (): Promise<boolean> => {
     if (window.ethereum.selectedAddress !== null) {
       console.log("You are already connected to MetaMask");
       return true;
-    }else{
+    } else {
       console.log("You are not connected to MetaMask");
       return false;
     }
@@ -183,15 +187,15 @@ export const _getBalance = async (
         method: "eth_getBalance",
         params: [address],
       });
-      
+
       balance = window.Web3.utils.fromWei(balance, "ether");
     } else {
       // Retrieve the balance of a specific token
       const web3 = new window.Web3(window.web3.currentProvider);
 
-      const contract = new web3.eth.Contract(ERC20.abi, type); 
-      
-      balance = await contract.methods.balanceOf(address).call();      
+      const contract = new web3.eth.Contract(ERC20.abi, type);
+
+      balance = await contract.methods.balanceOf(address).call();
       balance = window.Web3.utils.fromWei(balance, "ether");
     }
     return balance;
@@ -202,97 +206,71 @@ export const _getBalance = async (
   }
 };
 
-
 export const _deployNewToken = async (
-  supply: any,
-  name: any
+  name: any,
+  symbol: any,
+  supply: any
 ): Promise<null | string> => {
   const ERC20 = window.ERC20;
 
-  // Check if MetaMask is installed
-  if (typeof window.ethereum === "undefined") {
+  if (window.ethereum) {
+    // Check if the wallet is connected
+    if (!window.ethereum.selectedAddress) {
+      console.log("You are not connected to MetaMask");
+      return null;
+    } else {
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+            
+        const bytecode =ERC20.bytecode; // Replace with the bytecode of your contract
+        // const abi = ERC20.abi; // Replace with the ABI of your contract
+
+        const abi = [
+          ...ERC20.abi,
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              }
+            ],
+            "name": "mint",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          }
+        ];
+      
+        const factory = new ethers.ContractFactory(abi, bytecode, signer);
+        const contract = await factory.deploy(name, symbol);
+      
+        await contract.deployed();
+
+    //     const recipient =_getPublicKey();
+
+    //     const tx = await contract.connect(signer).mint(recipient, supply);
+    //     console.log(`Transaction hash: ${tx.hash}`);
+    // console.log(`New tokens minted for ${recipient}: ${supply}`);
+
+        console.log(`Contract deployed at address: ${contract.address}`);
+    
+        return contract.address;
+      } catch (error: any) {
+        // Handle error gracefully
+        console.log("Failed to deploy new token: " + error.message);
+        return null;
+      }
+    }
+  } else {
+    // Check if MetaMask is installed
     console.log("Please install MetaMask to use this feature");
     return null;
   }
-
-  // Check if the wallet is connected
-  if (!window.ethereum.selectedAddress) {
-    console.log("You are not connected to MetaMask");
-    return null;
-  }
-
-  try {
-    // Get the account address from MetaMask
-    const account = await _getPublicKey();
-
-    // Create the token contract instance
-    const web3 = new window.Web3(window.web3.currentProvider);
-
-    const contract = new web3.eth.Contract(ERC20.abi); 
-    // Build the contract data
-    const bytecode = ERC20.bytecode;
-    const abi = ERC20.abi;
-    const contractData = contract
-      .deploy({
-        data: bytecode,
-        arguments: [supply, name],
-      })
-      .encodeABI();
-
-    // Get the gas price and estimate the transaction gas limit
-    const gasPrice = await web3.eth.getGasPrice();
-    const gasLimit = await contract
-      .deploy({
-        data: bytecode,
-        arguments: [supply, name],
-      })
-      .estimateGas({ from: account });
-
-    // Create the transaction object
-    const transaction = {
-      from: account,
-      gasPrice: gasPrice,
-      gas: gasLimit,
-      data: contractData,
-    };
-
-    console.log("Transaction ", transaction, typeof transaction);
-
-    // Sign and send the transaction
-    const signedTransaction = await window.ethereum.request({
-      method: "eth_signTransaction",
-      params: [transaction],
-    });
-
-    console.log(
-      "Signed Transaction ",
-      signedTransaction,
-      typeof signedTransaction
-    );
-
-    const transactionHash = await web3.eth.sendSignedTransaction(
-      signedTransaction.rawTransaction
-    );
-
-    console.log("Transaction hash ", transactionHash, typeof transactionHash);
-
-    // Get the deployed contract address
-    const receipt = await web3.eth.getTransactionReceipt(
-      transactionHash
-    );
-    console.log("Receipt ", receipt, typeof receipt);
-
-    const contractAddress = receipt.contractAddress;
-    console.log(contractAddress, typeof contractAddress);
-    return contractAddress;
-  } catch (error: any) {
-    // Handle error gracefully
-    console.log("Failed to deploy new token: " + error.message);
-    return null;
-  }
 };
-
-
-
-
-
