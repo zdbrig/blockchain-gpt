@@ -17,7 +17,8 @@ async function _getNetworkInfo();
 async function _disconnectFromMetaMask();/* only call when user ask to disconnect his wallet */
 async function _deployNewToken(name,symbol,supply):address;
 async function _getBalance(address, type /* 'ether' or the token address */ );
-async function _swapTokens(tokenInAddress,tokenOutAddress,amountIn, account);
+async function _swapTokens(amountIn,tokenInName,tokenOutName);
+async function _getTokenAddress(tokenSymbol):address; /* return only if passed tokenSymbol is already found*/
 Solana: 
 async function _connectToPhantomWallet();
 async function _disconnectFromPhantomWallet();
